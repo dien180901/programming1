@@ -6,6 +6,7 @@ import java.util.HashSet;
 // Main class
 public class Hello {
 
+
     // main driver method
     public boolean is_empty(String s){
         return s.length()==0;
@@ -82,3 +83,6 @@ public class Hello {
 
     }
 }
+
+
+
