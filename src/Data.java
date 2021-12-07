@@ -12,7 +12,7 @@ public class Data {
 
         this.geographic_area = "";
         this.time_range = new timeRange();
-        this.iso_code = "=";
+        this.iso_code = "";
         this.new_cases = new ArrayList<Long>();
         this.new_deaths = new ArrayList<Long>();
         this.people_vaccinated = new ArrayList<Long>();

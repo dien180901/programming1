@@ -19,7 +19,7 @@ public class Hello {
     public static void readFile() throws IOException {
 //        input file
         File file = new File(
-                "/Users/s3891528/IdeaProjects/programming1/src/covid-data.txt");
+                "/Users/s3891528/Desktop/programming1/src/covid-data.txt");
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
 
@@ -31,10 +31,13 @@ public class Hello {
         Data Temp=new Data();
         ArrayList<Data> Datas=new ArrayList<Data>();
         int len=0;
+        String s2="dsad,,,,,,,";
+        System.out.println(Arrays.toString(s2.split(",")));
         while ((st = br.readLine()) != null)
         {
+            st+='0';
             String[] parameters = st.split(",");
-            System.out.println(Arrays.toString(parameters)+parameters.length);
+
             if (hash_Set.contains(parameters[0])){
                 Data temp_data=Datas.get(len-1);
                 timeRange temp_time_range=temp_data.getTime_range();
@@ -59,9 +62,7 @@ public class Hello {
                 Datas.add(Temp);
             }
         }
-        for (Data da :Datas){
-            System.out.println(da.getIso_code()+" "+da.getTime_range().getStartDate()+" "+da.getTime_range().getEndDate());
-        }
+
     }
     public static void main(String[] args) throws Exception
     {
