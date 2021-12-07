@@ -34,11 +34,14 @@ public class Hello {
         int len=0;
         String s2="dsad,,,,,,,";
         System.out.println(Arrays.toString(s2.split(",")));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt", true));
+
         while ((st = br.readLine()) != null)
         {
-            st+='0';
+            st+=",0";
             String[] parameters = st.split(",");
-
+            System.out.println(st);
+            writer.append(st+'\n');
             if (hash_Set.contains(parameters[0])){
                 Data temp_data=Datas.get(len-1);
                 timeRange temp_time_range=temp_data.getTime_range();
