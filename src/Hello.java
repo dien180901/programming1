@@ -71,10 +71,7 @@ public class Hello {
                 Datas.add(Temp);
             }
         }
-        for (Data da :Datas){
-            System.out.println(da.getIso_code()+" "+da.getTime_range().getStartDate()+" "+da.getTime_range().getEndDate());
-            System.out.println(da.getNew_cases());
-        }
+
     }
     public static void main(String[] args) throws Exception
     {
