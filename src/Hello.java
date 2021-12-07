@@ -43,6 +43,14 @@ public class Hello {
                 timeRange temp_time_range=temp_data.getTime_range();
                 temp_time_range.setEndDate(parameters[3]);
                 temp_data.setTime_range(temp_time_range);
+                ArrayList<Long> new_case=temp_data.getNew_cases();
+                new_case.add(ChangeLong(parameters[4]));
+                ArrayList<Long> new_death=temp_data.getNew_deaths();
+                new_death.add(ChangeLong(parameters[5]));
+                ArrayList<Long> people_vaccinated=temp_data.getPeople_vaccinated();
+                people_vaccinated.add(ChangeLong(parameters[6]));
+                ArrayList<Long> population=temp_data.getPopulation();
+                population.add(ChangeLong(parameters[7]));
                 Datas.set(len-1,temp_data);
             }else{
                 hash_Set.add(parameters[0]);
@@ -55,14 +63,17 @@ public class Hello {
                 ArrayList<Long> people_vaccinated=new ArrayList<Long>();
                 people_vaccinated.add(ChangeLong(parameters[6]));
                 ArrayList<Long> population=new ArrayList<Long>();
-                population.add(ChangeLong(parameters[5]));
+                population.add(ChangeLong(parameters[7]));
 
                 timeRange time_range=new timeRange(parameters[3],parameters[3]);
                 Temp=new Data(parameters[0],parameters[2],time_range,new_cases,new_deaths,people_vaccinated,population);
                 Datas.add(Temp);
             }
         }
-
+        for (Data da :Datas){
+            System.out.println(da.getIso_code()+" "+da.getTime_range().getStartDate()+" "+da.getTime_range().getEndDate());
+            System.out.println(da.getNew_cases());
+        }
     }
     public static void main(String[] args) throws Exception
     {
