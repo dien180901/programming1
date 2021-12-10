@@ -20,7 +20,7 @@ public class Hello {
     public static void readFile() throws IOException {
 //        input file
         File file = new File(
-                "/Users/s3891528/Desktop/programming1/src/covid-data.txt");
+                "/Users/s3922087/IdeaProjects/programming13/src/covid.txt");
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
 
@@ -68,14 +68,26 @@ public class Hello {
                 timeRange time_range=new timeRange(parameters[3],parameters[3]);
                 Temp=new Data(parameters[0],parameters[2],time_range,new_cases,new_deaths,people_vaccinated,population);
                 Datas.add(Temp);
+
             }
         }
-
+        Summary f1 = new Summary(Datas.get(0));
+        long uptocases = f1.UpToCases();
+        long uptodeaths = f1.UpToDeaths();
+        long uptovaccinateds = f1.UpToVaccinateds();
+        long newcases = f1.NewTotalCases();
+        long newdeaths = f1.NewTotalDeath();
+        long newvaccinateds = f1.NewTotalVaccinated();
+        System.out.println(uptocases);
+        System.out.println(uptodeaths);
+        System.out.println(uptovaccinateds);
+        System.out.println(newcases);
+        System.out.println(newdeaths);
+        System.out.println(newvaccinateds);
     }
     public static void main(String[] args) throws Exception
     {
         readFile();
-
 
     }
 }
