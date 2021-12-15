@@ -90,6 +90,11 @@
 //
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 public class Summary extends Data{
 
     private Data data ;
@@ -98,23 +103,60 @@ public class Summary extends Data{
         this.data = data;
     }
 
-    public long UpToCases(){
+    public static ArrayList<List<Integer>> DivideEven(ArrayList<Integer> dateArrayList , int numOfGroups){ //10, 4
+        int[] group  = new int[numOfGroups];
+        int remainder = dateArrayList.size()%numOfGroups; //2
+
+        for (int i=0;i<numOfGroups;i++){
+            if (i<remainder){
+                group[i]= dateArrayList.size()/numOfGroups+1;
+            }else{
+                group[i]= dateArrayList.size()/numOfGroups;
+            }
+        }
+        int index=0;
+
+        ArrayList<List<Integer>> substring = new ArrayList<List<Integer>>();
+        for (int i:group){
+            List<Integer> arrlist2 = dateArrayList.subList(index,index+i);
+            index+=i;
+            substring.add(arrlist2);
+        }
+        return substring;
+    }
+
+    public ArrayList<List<Integer>> NumGroup(ArrayList<Integer> days, int n){
+        return DivideEven(days,n);
+    }
+
+    public static ArrayList<List<Integer>> NumDay(ArrayList<Integer> days, int n){
+        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (days.size()%n==0) res= DivideEven(days,n);
+        return  res;
+
+    }
+
+    public static ArrayList<Integer> NoGroup(ArrayList<Integer> days, int n){
+        return days;
+    }
+
+    public long UpToCases(ArrayList<Integer> days ){
         long total=0;
-        for (long value:this.data.getNew_cases()){
+        for (int value:days){
             total+=value;
         }
         return total;
     }
 
-    public long UpToDeaths(){
+    public long UpToDeaths(ArrayList<Integer> days){
         long total=0;
-        for (long value:this.data.getNew_deaths()){
+        for (long value:days){
             total+=value;
         }
         return total;
     }
 
-    public long UpToVaccinateds(){
+    public long UpToVaccinateds(ArrayList<Integer> days){
         long total=0;
         for (long value:this.data.getPeople_vaccinated()){
             total+=value;
@@ -122,15 +164,16 @@ public class Summary extends Data{
         return total;
     }
 
-    public long NewTotalCases(){
-        return this.data.getNew_cases().get(this.data.getNew_cases().size()-1);
+    public long NewTotalCases(ArrayList<Integer> days){
+        return UpToCases(days);
     }
 
-    public long NewTotalDeath(){
-        return this.data.getNew_deaths().get(this.data.getNew_deaths().size()-1);
+    public long NewTotalDeath(ArrayList<Integer> days){
+        return UpToDeaths(days);
     }
 
     public long NewTotalVaccinated(){
         return this.data.getPeople_vaccinated().get(this.data.getPeople_vaccinated().size()-1)-this.data.getPeople_vaccinated().get(this.data.getPeople_vaccinated().size()-2);
     }
+
 }
