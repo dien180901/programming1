@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Date;
+
 public class Data {
     private String iso_code;
     private String geographic_area;
-    private timeRange time_range;
+    private ArrayList<Date> time_range;
     private ArrayList<Long> new_cases;
     private ArrayList<Long> new_deaths ;
     private ArrayList<Long> people_vaccinated;
@@ -11,7 +13,7 @@ public class Data {
     public Data() {
 
         this.geographic_area = "";
-        this.time_range = new timeRange();
+        this.time_range = new ArrayList<Date>();
         this.iso_code = "";
         this.new_cases = new ArrayList<Long>();
         this.new_deaths = new ArrayList<Long>();
@@ -19,7 +21,7 @@ public class Data {
         this.population = new ArrayList<Long>();
     }
 
-    public Data(String iso_code, String geographic_area, timeRange time_range, ArrayList<Long> new_cases, ArrayList<Long> new_deaths, ArrayList<Long> people_vaccinated, ArrayList<Long> population) {
+    public Data(String iso_code, String geographic_area, ArrayList<Date> time_range, ArrayList<Long> new_cases, ArrayList<Long> new_deaths, ArrayList<Long> people_vaccinated, ArrayList<Long> population) {
         this.iso_code = iso_code;
         this.geographic_area = geographic_area;
         this.time_range = time_range;
@@ -37,11 +39,11 @@ public class Data {
         this.geographic_area = geographic_area;
     }
 
-    public timeRange getTime_range() {
+    public ArrayList<Date> getTime_range() {
         return time_range;
     }
 
-    public void setTime_range(timeRange time_range) {
+    public void setTime_range(ArrayList<Date> time_range) {
         this.time_range = time_range;
     }
 

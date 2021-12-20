@@ -1,95 +1,5 @@
-//import java.util.ArrayList;
-//
-//public class Summary  {
-//    private String iso_code;
-//    private String geographic_area;
-//    private timeRange time_range;
-//    private long new_cases;
-//    private long new_deaths ;
-//    private long people_vaccinated;
-//    private long population ;
-//
-//    public Summary(){
-//        this.iso_code = iso_code;
-//        this.geographic_area = geographic_area;
-//        this.time_range = time_range;
-//        this.new_cases = new_cases;
-//        this.new_deaths = new_deaths;
-//        this.people_vaccinated = people_vaccinated;
-//        this.population = population;
-//    }
-//
-//    public Summary(String iso_code, String geographic_area, timeRange time_range, long new_cases, long new_deaths, long people_vaccinated, long population){
-//        this.iso_code = iso_code;
-//        this.geographic_area = geographic_area;
-//        this.time_range = time_range;
-//        this.new_cases = new_cases;
-//        this.new_deaths = new_deaths;
-//        this.people_vaccinated = people_vaccinated;
-//        this.population = population;
-//    }
-//
-//    public String getIso_code() {
-//        return iso_code;
-//    }
-//
-//    public void setIso_code(String iso_code) {
-//        this.iso_code = iso_code;
-//    }
-//
-//    public String getGeographic_area() {
-//        return geographic_area;
-//    }
-//
-//    public void setGeographic_area(String geographic_area) {
-//        this.geographic_area = geographic_area;
-//    }
-//
-//    public timeRange getTime_range() {
-//        return time_range;
-//    }
-//
-//    public void setTime_range(timeRange time_range) {
-//        this.time_range = time_range;
-//    }
-//
-//    public long getNew_cases() {
-//        return new_cases;
-//    }
-//
-//    public void setNew_cases(long new_cases) {
-//        this.new_cases = new_cases;
-//    }
-//
-//    public long getNew_deaths() {
-//        return new_deaths;
-//    }
-//
-//    public void setNew_deaths(long new_deaths) {
-//        this.new_deaths = new_deaths;
-//    }
-//
-//    public long getPeople_vaccinated() {
-//        return people_vaccinated;
-//    }
-//
-//    public void setPeople_vaccinated(long people_vaccinated) {
-//        this.people_vaccinated = people_vaccinated;
-//    }
-//
-//    public long getPopulation() {
-//        return population;
-//    }
-//
-//    public void setPopulation(long population) {
-//        this.population = population;
-//    }
-//
-//
-//}
-//
-
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -99,81 +9,139 @@ public class Summary extends Data{
 
     private Data data ;
 
+    // Constructor
     public Summary(Data data) {
         this.data = data;
     }
 
-    public static ArrayList<List<Integer>> DivideEven(ArrayList<Integer> dateArrayList , int numOfGroups){ //10, 4
+    public Data getData() {
+        return data;
+    }
+
+    // Get the index of date in the time_range array list of data object
+    public ArrayList<Integer> userTimeRange(Date beginDay, Date endDay) {
+        ArrayList<Integer> dayIndexes = new ArrayList<>();
+        for (int i = 0; i < data.getTime_range().size(); i++) {
+            if (data.getTime_range().get(i).after(beginDay) && data.getTime_range().get(i).before(endDay))
+                dayIndexes.add(i);
+        }
+        return dayIndexes;
+    }
+
+    // Group divided evenly
+    public static ArrayList<List<Integer>> DivideEven(ArrayList<Integer> dayIndexes , int numOfGroups) {
         int[] group  = new int[numOfGroups];
-        int remainder = dateArrayList.size()%numOfGroups; //2
+        int remainder = dayIndexes.size()%numOfGroups;
 
         for (int i=0;i<numOfGroups;i++){
             if (i<remainder){
-                group[i]= dateArrayList.size()/numOfGroups+1;
+                group[i]= dayIndexes.size()/numOfGroups+1;
             }else{
-                group[i]= dateArrayList.size()/numOfGroups;
+                group[i]= dayIndexes.size()/numOfGroups;
             }
         }
         int index=0;
 
-        ArrayList<List<Integer>> substring = new ArrayList<List<Integer>>();
+        ArrayList<List<Integer>> groupRes = new ArrayList<List<Integer>>();
         for (int i:group){
-            List<Integer> arrlist2 = dateArrayList.subList(index,index+i);
+            List<Integer> arrlist2 = dayIndexes.subList(index,index+i);
             index+=i;
-            substring.add(arrlist2);
+            groupRes.add(arrlist2);
         }
-        return substring;
+        return groupRes;
     }
 
-    public ArrayList<List<Integer>> NumGroup(ArrayList<Integer> days, int n){
-        return DivideEven(days,n);
+    // Number of groups
+    public ArrayList<List<Integer>> NumGroup(ArrayList<Integer> dayIndexes, int n){
+        return DivideEven(dayIndexes,n);
     }
 
-    public static ArrayList<List<Integer>> NumDay(ArrayList<Integer> days, int n){
+    //Number of days
+    public static ArrayList<List<Integer>> NumDay(ArrayList<Integer> dayIndexes, int n){
         ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
-        if (days.size()%n==0) res= DivideEven(days,n);
-        return  res;
-
+        if (dayIndexes.size()%n==0) res= DivideEven(dayIndexes,dayIndexes.size()/n);
+        return res;
     }
 
-    public static ArrayList<Integer> NoGroup(ArrayList<Integer> days, int n){
-        return days;
+    // No grouping
+    public static ArrayList<List<Integer>> NoGroup(ArrayList<Integer> dayIndexes){
+//        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
+//        res.add(dayIndexes);
+//        return res;
+        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
+        res= DivideEven(dayIndexes,dayIndexes.size());
+        return res;
     }
 
-    public long UpToCases(ArrayList<Integer> days ){
-        long total=0;
-        for (int value:days){
-            total+=value;
+    public ArrayList<List<String>> UpToCases(ArrayList<List<Integer>> dayIndexes){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        ArrayList<List<String>> res = new ArrayList<>();
+        List<String> groupName = new ArrayList<>();
+        List<String> value = new ArrayList<>();
+        for(List<Integer> group: dayIndexes){
+            long total=0;
+            for(int index: group)  total+=data.getNew_cases().get(index);
+            groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
+            value.add(Long.toString(total));
         }
-        return total;
+        res.add(groupName);
+        res.add(value);
+        return res;
     }
 
-    public long UpToDeaths(ArrayList<Integer> days){
-        long total=0;
-        for (long value:days){
-            total+=value;
+    public ArrayList<List<String>> UpToDeaths(ArrayList<List<Integer>> dayIndexes){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        ArrayList<List<String>> res = new ArrayList<>();
+        List<String> groupName = new ArrayList<>();
+        List<String> value = new ArrayList<>();
+        for(List<Integer> group: dayIndexes){
+            long total=0;
+            for(int index: group)  total+=data.getNew_deaths().get(index);
+            groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
+            value.add(Long.toString(total));
         }
-        return total;
+        res.add(groupName);
+        res.add(value);
+        return res;
     }
 
-    public long UpToVaccinateds(ArrayList<Integer> days){
-        long total=0;
-        for (long value:this.data.getPeople_vaccinated()){
-            total+=value;
+    public ArrayList<List<String>> UpToVaccinateds(ArrayList<List<Integer>> dayIndexes){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        ArrayList<List<String>> res = new ArrayList<>();
+        List<String> groupName = new ArrayList<>();
+        List<String> value = new ArrayList<>();
+        for(List<Integer> group: dayIndexes){
+            long total=0;
+            total=data.getPeople_vaccinated().get(group.get(group.size()-1));
+            groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
+            value.add(Long.toString(total));
         }
-        return total;
+        res.add(groupName);
+        res.add(value);
+        return res;
     }
 
-    public long NewTotalCases(ArrayList<Integer> days){
-        return UpToCases(days);
+    public ArrayList<List<String>> NewTotalCases(ArrayList<List<Integer>> dayIndexes){
+        return UpToCases(dayIndexes);
     }
 
-    public long NewTotalDeath(ArrayList<Integer> days){
-        return UpToDeaths(days);
+    public ArrayList<List<String>> NewTotalDeath(ArrayList<List<Integer>> dayIndexes){
+        return UpToDeaths(dayIndexes);
     }
 
-    public long NewTotalVaccinated(){
-        return this.data.getPeople_vaccinated().get(this.data.getPeople_vaccinated().size()-1)-this.data.getPeople_vaccinated().get(this.data.getPeople_vaccinated().size()-2);
+    public ArrayList<List<String>> NewTotalVaccinated(ArrayList<List<Integer>> dayIndexes){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        ArrayList<List<String>> res = new ArrayList<>();
+        List<String> groupName = new ArrayList<>();
+        List<String> value = new ArrayList<>();
+        for(List<Integer> group: dayIndexes){
+            long total=0;
+            total=data.getPeople_vaccinated().get(group.get(group.size()-1))-data.getPeople_vaccinated().get(group.get(0));
+            groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
+            value.add(Long.toString(total));
+        }
+        res.add(groupName);
+        res.add(value);
+        return res;
     }
-
 }

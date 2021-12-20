@@ -1,12 +1,11 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.HashSet;
+import java.text.DateFormat;
+import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 // Main class
 public class Hello {
-
-
     // main driver method
     public boolean is_empty(String s){
         return s.length()==0;
@@ -17,10 +16,10 @@ public class Hello {
         }
         return Long.parseLong(s);
     }
-    public static void readFile() throws IOException {
-//        input file
+    public static ArrayList<Data>  readFile() throws Exception {
+    // Input file
         File file = new File(
-                "/Users/s3915468/IdeaProjects/programming12/src/covid.txt");
+                "/Users/baohang/Desktop/RMIT/Programming 1/Asm2/programming1/programming1/src/covid.txt");
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
 
@@ -40,42 +39,119 @@ public class Hello {
 
             if (hash_Set.contains(parameters[0])){
                 Data temp_data=Datas.get(len-1);
-                timeRange temp_time_range=temp_data.getTime_range();
-                temp_time_range.setEndDate(parameters[3]);
-                temp_data.setTime_range(temp_time_range);
+
+                // Time_range ArrayList
+                ArrayList<Date> time_range=temp_data.getTime_range();
+                time_range.add(new SimpleDateFormat("MM/dd/yyyy").parse(parameters[3]));
+
                 ArrayList<Long> new_case=temp_data.getNew_cases();
                 new_case.add(ChangeLong(parameters[4]));
+
                 ArrayList<Long> new_death=temp_data.getNew_deaths();
                 new_death.add(ChangeLong(parameters[5]));
+
                 ArrayList<Long> people_vaccinated=temp_data.getPeople_vaccinated();
                 people_vaccinated.add(ChangeLong(parameters[6]));
+
                 ArrayList<Long> population=temp_data.getPopulation();
                 population.add(ChangeLong(parameters[7]));
+
                 Datas.set(len-1,temp_data);
-            }else{
+            }
+            else{
                 hash_Set.add(parameters[0]);
 
                 len+=1;
+
+                ArrayList<Date> time_range=new ArrayList<Date>();
+                time_range.add(new SimpleDateFormat("MM/dd/yyyy").parse(parameters[3]));
+
                 ArrayList<Long> new_cases=new ArrayList<Long>();
                 new_cases.add(ChangeLong(parameters[4]));
+
                 ArrayList<Long> new_deaths=new ArrayList<Long>();
                 new_deaths.add(ChangeLong(parameters[5]));
+
                 ArrayList<Long> people_vaccinated=new ArrayList<Long>();
                 people_vaccinated.add(ChangeLong(parameters[6]));
+
                 ArrayList<Long> population=new ArrayList<Long>();
                 population.add(ChangeLong(parameters[7]));
 
-                timeRange time_range=new timeRange(parameters[3],parameters[3]);
                 Temp=new Data(parameters[0],parameters[2],time_range,new_cases,new_deaths,people_vaccinated,population);
                 Datas.add(Temp);
 
             }
         }
-        Summary f1 = new Summary(Datas.get(0));
+        return Datas;
     }
-    public static void main(String[] args) throws Exception
-    {
-        readFile();
+
+    public static void main(String[] args) throws Exception {
+        /*-- DATA FORMATTING --*/
+        ArrayList<Data> Datas = readFile();
+        Scanner in=new Scanner(System.in);
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+        /*-- ASK USER TO INPUT THE COUNTRY NAME --*/
+        System.out.println("Enter a country: ");
+        String countryName = in.nextLine();
+        // Get the index of the country object
+        int indexInDatas=0;
+        for(int i=0; i<Datas.size(); i++){
+            if(countryName.equals(Datas.get(i).getGeographic_area())) indexInDatas=i;
+        }
+
+        /*-- ASK USER TO INPUT THE BEGIN AND END DATE --*/
+        System.out.println("Enter start day (MM/dd/yyyy)");
+        Date beginDay = df.parse(in.nextLine());
+        System.out.println("Enter end day (MM/dd/yyyy)");
+        Date endDay = df.parse(in.nextLine());
+        // Create Summary variable
+        Summary summaryData = new Summary(Datas.get(indexInDatas));
+        // Create a time range within user date input
+        ArrayList<Integer> dayIndexes = summaryData.userTimeRange(beginDay, endDay);
+
+        /*-- ASK USER TO CHOOSE THE GROUPING STYLE --*/
+        ArrayList<List<Integer>> groupingAL = new ArrayList<>();
+        System.out.println("Enter the GROUPING STYLE:   1->NO GROUPING    2->NUMBER OF GROUPS   3->NUMBER OF DAYS ");
+        int groupingStyle = in.nextInt();
+        if(groupingStyle==1) groupingAL=summaryData.NoGroup(dayIndexes);
+        else if(groupingStyle==2) {
+            System.out.println("How many groups you want?: ");
+            int groups = in.nextInt();
+            groupingAL=summaryData.NumGroup(dayIndexes, groups);
+        }
+        else if(groupingStyle==3) {
+            System.out.println("How many days you want in a group?: ");
+            int days = in.nextInt();
+            groupingAL=summaryData.NumGroup(dayIndexes, days);
+        }
+
+        /*-- ASK USER TO CHOOSE THE METRICS --*/
+        System.out.println("Enter the METRICS:   1->POSITIVE CASES    2->DEATHS   3->VACCINATED PEOPLE ");
+        int metric = in.nextInt();
+
+        /*-- ASK USER TO CHOOSE THE RESULT TYPE --*/
+        System.out.println("Enter the METRICS:   1->NEW TOTAL    2->UP TO ");
+        int resType = in.nextInt();
+
+        ArrayList<List<String>> displayData = new ArrayList<>();
+        if(metric==1) displayData=summaryData.UpToCases(groupingAL);
+        else if(metric==2) displayData=summaryData.UpToDeaths(groupingAL);
+        else if(metric==3){
+            if(resType==1) displayData=summaryData.NewTotalVaccinated(groupingAL);
+            else if(resType==2) displayData=summaryData.UpToVaccinateds(groupingAL);
+        }
+
+        System.out.println(displayData);
+        Display display = new Display(summaryData);
+        display.tabularDisplay(displayData);
+
+
+
+
+
+
 
     }
 }
