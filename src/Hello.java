@@ -145,7 +145,7 @@ public class Hello {
 
         System.out.println(displayData);
         Display display = new Display(summaryData);
-        display.tabularDisplay(displayData);
+        display.chartDisplay(displayData);
 
 
 

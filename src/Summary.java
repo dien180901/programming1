@@ -1,7 +1,6 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class Summary extends Data{
             if (data.getTime_range().get(i).after(beginDay) && data.getTime_range().get(i).before(endDay))
                 dayIndexes.add(i);
         }
-        return dayIndexes;
+        return dayIndexes; //[1,2,3]
     }
 
     // Group divided evenly
