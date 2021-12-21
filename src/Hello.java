@@ -135,16 +135,16 @@ public class Hello {
         int resType = in.nextInt();
 
         ArrayList<List<String>> displayData = new ArrayList<>();
-        if(metric==1) displayData=summaryData.UpToCases(groupingAL);
-        else if(metric==2) displayData=summaryData.UpToDeaths(groupingAL);
+        if(metric==1) summaryData.UpToCases(groupingAL);
+        else if(metric==2) summaryData.UpToDeaths(groupingAL);
         else if(metric==3){
-            if(resType==1) displayData=summaryData.NewTotalVaccinated(groupingAL);
-            else if(resType==2) displayData=summaryData.UpToVaccinateds(groupingAL);
+            if(resType==1) summaryData.NewTotalVaccinated(groupingAL);
+            else if(resType==2) summaryData.UpToVaccinateds(groupingAL);
         }
-
+        displayData=summaryData.getdisplayData();
         System.out.println(displayData);
         Display display = new Display(summaryData);
-        display.tabularDisplay(displayData);
+        display.tabularDisplay();
 
     }
 }

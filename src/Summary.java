@@ -7,6 +7,8 @@ import java.util.List;
 public class Summary extends Data{
 
     private Data data ;
+    private ArrayList<List<String>> displayData;
+
 
     // Constructor
     public Summary(Data data) {
@@ -16,6 +18,10 @@ public class Summary extends Data{
     public Data getData() {
         return data;
     }
+    public ArrayList<List<String>> getdisplayData() {
+        return displayData;
+    }
+
 
     // Get the index of date in the time_range array list of data object
     public ArrayList<Integer> userTimeRange(Date beginDay, Date endDay) {
@@ -69,7 +75,7 @@ public class Summary extends Data{
         return res;
     }
 
-    public ArrayList<List<String>> UpToCases(ArrayList<List<Integer>> dayIndexes){
+    public void UpToCases(ArrayList<List<Integer>> dayIndexes){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
@@ -82,10 +88,10 @@ public class Summary extends Data{
         }
         res.add(groupName);
         res.add(value);
-        return res;
+        displayData=res;
     }
 
-    public ArrayList<List<String>> UpToDeaths(ArrayList<List<Integer>> dayIndexes){
+    public void UpToDeaths(ArrayList<List<Integer>> dayIndexes){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
@@ -98,10 +104,11 @@ public class Summary extends Data{
         }
         res.add(groupName);
         res.add(value);
-        return res;
+        displayData=res;
+        //return res;
     }
 
-    public ArrayList<List<String>> UpToVaccinateds(ArrayList<List<Integer>> dayIndexes){
+    public void UpToVaccinateds(ArrayList<List<Integer>> dayIndexes){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
@@ -114,18 +121,11 @@ public class Summary extends Data{
         }
         res.add(groupName);
         res.add(value);
-        return res;
+        displayData=res;
+        //return res;
     }
 
-    public ArrayList<List<String>> NewTotalCases(ArrayList<List<Integer>> dayIndexes){
-        return UpToCases(dayIndexes);
-    }
-
-    public ArrayList<List<String>> NewTotalDeath(ArrayList<List<Integer>> dayIndexes){
-        return UpToDeaths(dayIndexes);
-    }
-
-    public ArrayList<List<String>> NewTotalVaccinated(ArrayList<List<Integer>> dayIndexes){
+    public void NewTotalVaccinated(ArrayList<List<Integer>> dayIndexes){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
@@ -143,6 +143,7 @@ public class Summary extends Data{
         }
         res.add(groupName);
         res.add(value);
-        return res;
+        displayData=res;
+        //return res;
     }
 }
