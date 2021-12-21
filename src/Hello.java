@@ -16,11 +16,7 @@ public class Hello {
         }
         return Long.parseLong(s);
     }
-    public static ArrayList<Long> vaccinatedChangeLong(ArrayList<Long>people_vaccinated){
-        people_vaccinated.remove(people_vaccinated.size()-1);
-        people_vaccinated.add(people_vaccinated.get(people_vaccinated.size()-1));
-        return people_vaccinated;
-    }
+
     public static ArrayList<Data>  readFile() throws Exception {
     // Input file
         File file = new File(
@@ -30,8 +26,7 @@ public class Hello {
 
         // Declaring a string variable
         String st;
-        // Consition holds true till
-        // there is character in a string
+        // Consition holds true till there is character in a string
         Set<String> hash_Set = new HashSet<String>();
         Data Temp=new Data();
         ArrayList<Data> Datas=new ArrayList<Data>();
@@ -56,10 +51,10 @@ public class Hello {
                 new_death.add(ChangeLong(parameters[5]));
 
                 ArrayList<Long> people_vaccinated=temp_data.getPeople_vaccinated();
-                people_vaccinated.add(ChangeLong(parameters[6]));
-
-                if(people_vaccinated.get(people_vaccinated.size()-1)==0){
-                    people_vaccinated=vaccinatedChangeLong(people_vaccinated);
+                if(!Objects.equals(parameters[6], ""))
+                    people_vaccinated.add(Long.parseLong(parameters[6]));
+                else {
+                    people_vaccinated.add(people_vaccinated.get(people_vaccinated.size()-1));
                 }
 
                 ArrayList<Long> population=temp_data.getPopulation();
@@ -143,17 +138,22 @@ public class Hello {
         System.out.println("Enter the METRICS:   1->NEW TOTAL    2->UP TO ");
         int resType = in.nextInt();
 
-        ArrayList<List<String>> displayData = new ArrayList<>();
+        /*-- ASK USER TO CHOOSE THE METRIC AND RESULT TYPE --*/
+        ArrayList<List<String>> displayData;
         if(metric==1) summaryData.UpToCases(groupingAL);
         else if(metric==2) summaryData.UpToDeaths(groupingAL);
         else if(metric==3){
             if(resType==1) summaryData.NewTotalVaccinated(groupingAL);
             else if(resType==2) summaryData.UpToVaccinateds(groupingAL);
         }
-        displayData=summaryData.getdisplayData();
-        System.out.println(displayData);
+
+        /*-- ASK USER TO CHOOSE DISPLAYING TYPE --*/
+        //System.out.println("Enter the METRICS:   1->TABLE    2->CHART ");
+        int displayType = in.nextInt();
+        //System.out.println(displayData);
         Display display = new Display(summaryData);
-        display.tabularDisplay();
+        if(displayType==1) display.tabularDisplay();
+        if(displayType==2) display.chartDisplay();
 
     }
 }

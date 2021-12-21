@@ -14,6 +14,7 @@ public class Summary extends Data{
         this.data = data;
     }
 
+    // Getter
     public Data getData() {
         return data;
     }
@@ -68,8 +69,7 @@ public class Summary extends Data{
 
     // No grouping
     public static ArrayList<List<Integer>> NoGroup(ArrayList<Integer> dayIndexes){
-        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
-        res= DivideEven(dayIndexes,dayIndexes.size());
+        ArrayList<List<Integer>> res = DivideEven(dayIndexes,dayIndexes.size());
         return res;
     }
 
