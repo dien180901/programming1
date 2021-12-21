@@ -9,7 +9,6 @@ public class Summary extends Data{
     private Data data ;
     private ArrayList<List<String>> displayData;
 
-
     // Constructor
     public Summary(Data data) {
         this.data = data;
@@ -21,7 +20,6 @@ public class Summary extends Data{
     public ArrayList<List<String>> getdisplayData() {
         return displayData;
     }
-
 
     // Get the index of date in the time_range array list of data object
     public ArrayList<Integer> userTimeRange(Date beginDay, Date endDay) {
@@ -105,7 +103,6 @@ public class Summary extends Data{
         res.add(groupName);
         res.add(value);
         displayData=res;
-        //return res;
     }
 
     public void UpToVaccinateds(ArrayList<List<Integer>> dayIndexes){
@@ -113,7 +110,9 @@ public class Summary extends Data{
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
         List<String> value = new ArrayList<>();
+
         for(List<Integer> group: dayIndexes){
+            System.out.println(group);
             long total=0;
             total=data.getPeople_vaccinated().get(group.get(group.size()-1));
             groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
@@ -122,7 +121,6 @@ public class Summary extends Data{
         res.add(groupName);
         res.add(value);
         displayData=res;
-        //return res;
     }
 
     public void NewTotalVaccinated(ArrayList<List<Integer>> dayIndexes){
@@ -144,6 +142,5 @@ public class Summary extends Data{
         res.add(groupName);
         res.add(value);
         displayData=res;
-        //return res;
     }
 }

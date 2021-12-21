@@ -16,10 +16,15 @@ public class Hello {
         }
         return Long.parseLong(s);
     }
+    public static ArrayList<Long> vaccinatedChangeLong(ArrayList<Long>people_vaccinated){
+        people_vaccinated.remove(people_vaccinated.size()-1);
+        people_vaccinated.add(people_vaccinated.get(people_vaccinated.size()-1));
+        return people_vaccinated;
+    }
     public static ArrayList<Data>  readFile() throws Exception {
     // Input file
         File file = new File(
-                "/Users/baohang/Desktop/RMIT/Programming 1/Asm2/programming1/programming1/src/covid.txt");
+                "/Users/baohang/Desktop/RMIT/Programming 1/Asm2/programming1/programming1/src/covid-data.txt");
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
 
@@ -52,6 +57,10 @@ public class Hello {
 
                 ArrayList<Long> people_vaccinated=temp_data.getPeople_vaccinated();
                 people_vaccinated.add(ChangeLong(parameters[6]));
+
+                if(people_vaccinated.get(people_vaccinated.size()-1)==0){
+                    people_vaccinated=vaccinatedChangeLong(people_vaccinated);
+                }
 
                 ArrayList<Long> population=temp_data.getPopulation();
                 population.add(ChangeLong(parameters[7]));
@@ -123,7 +132,7 @@ public class Hello {
         else if(groupingStyle==3) {
             System.out.println("How many days you want in a group?: ");
             int days = in.nextInt();
-            groupingAL=summaryData.NumGroup(dayIndexes, days);
+            groupingAL=summaryData.NumDay(dayIndexes, days);
         }
 
         /*-- ASK USER TO CHOOSE THE METRICS --*/

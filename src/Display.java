@@ -8,8 +8,6 @@ public class Display {
         this.summ = summ;
     }
 
-
-
     // Method to display data by table
     public void tabularDisplay() {
 
