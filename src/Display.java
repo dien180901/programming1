@@ -22,31 +22,31 @@ public class Display {
         System.out.println("|_______________________________|________________|");
     }
 
+    //Method to display data by chart
     public void chartDisplay(ArrayList<List<String>> displayData) {
-        float maxValue = MaximumValue(displayData); // Get largest value from data
-        for (int y = 0; y < 24; y++) { // Iterate the program through y=24 times to get y-axis
+        float maxValue = MaximumValue(displayData);
+        for (int y = 0; y < 24; y++) {
             System.out.print("\n|");
             String blank = " ";
-            for (String value : displayData.get(1)) { // Iterate through data
+            for (String value : displayData.get(1)) {
                 int a = 78 / displayData.get(1).size();
-                int space = Math.round(a) - 1; // Amount of spaces between two data points
-                if (y == (23 - Math.round(23 / maxValue * Integer.parseInt(value)))) { // prints '*' if line is equals to formula
+                int space = Math.round(a) - 1;
+                if ((23 - Math.round(23 / maxValue * Integer.parseInt(value)))==y) {
                     System.out.print("*");
                 }
-                if (y == 23) { // change blank to '_' to get the x-axis
+                if (y == 23) {
                     blank = "_";
                 }
-                if (y != (23 - Math.round(23 / maxValue * Integer.parseInt(value)))) { // prints blank if line is not equals to formula
+                if ((23 - Math.round(23 / maxValue * Integer.parseInt(value)))!=y) {
                     System.out.print(blank);
                 }
-                while (space > 0) { // create spaces between two points of each line
+                while (space > 0) {
                     System.out.print(blank);
                     space--;
                 }
             }
         }
     }
-
 
     public int MaximumValue (ArrayList<List<String>> displayData) {
         int max = 0;

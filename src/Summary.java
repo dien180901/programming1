@@ -135,7 +135,8 @@ public class Summary extends Data{
         List<String> value = new ArrayList<>();
         for(List<Integer> group: dayIndexes){
             long total=0;
-            total=data.getPeople_vaccinated().get(group.get(group.size()-1))-data.getPeople_vaccinated().get(group.get(0));
+            if(group.size()>1) total=data.getPeople_vaccinated().get(group.get(group.size()-1))-data.getPeople_vaccinated().get(group.get(0));
+            else total=data.getPeople_vaccinated().get(group.get(0));
             groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
             value.add(Long.toString(total));
         }
