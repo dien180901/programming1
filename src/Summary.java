@@ -24,7 +24,7 @@ public class Summary extends Data{
             if (data.getTime_range().get(i).after(beginDay) && data.getTime_range().get(i).before(endDay))
                 dayIndexes.add(i);
         }
-        return dayIndexes; //[1,2,3]
+        return dayIndexes;
     }
 
     // Group divided evenly
@@ -64,9 +64,6 @@ public class Summary extends Data{
 
     // No grouping
     public static ArrayList<List<Integer>> NoGroup(ArrayList<Integer> dayIndexes){
-//        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
-//        res.add(dayIndexes);
-//        return res;
         ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
         res= DivideEven(dayIndexes,dayIndexes.size());
         return res;
@@ -136,7 +133,11 @@ public class Summary extends Data{
         for(List<Integer> group: dayIndexes){
             long total=0;
             if(group.size()>1) total=data.getPeople_vaccinated().get(group.get(group.size()-1))-data.getPeople_vaccinated().get(group.get(0));
-            else total=data.getPeople_vaccinated().get(group.get(0));
+            else {
+                if(group.get(0)!=0)
+                    total = data.getPeople_vaccinated().get(group.get(0)) - data.getPeople_vaccinated().get(group.get(0) - 1);
+                else total = data.getPeople_vaccinated().get(group.get(0));
+            }
             groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
             value.add(Long.toString(total));
         }

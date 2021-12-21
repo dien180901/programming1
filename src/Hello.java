@@ -80,7 +80,6 @@ public class Hello {
 
                 Temp=new Data(parameters[0],parameters[2],time_range,new_cases,new_deaths,people_vaccinated,population);
                 Datas.add(Temp);
-
             }
         }
         return Datas;
@@ -146,12 +145,6 @@ public class Hello {
         System.out.println(displayData);
         Display display = new Display(summaryData);
         display.tabularDisplay(displayData);
-
-
-
-
-
-
 
     }
 }
