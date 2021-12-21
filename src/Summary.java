@@ -1,6 +1,7 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,13 @@ public class Summary extends Data{
     // Get the index of date in the time_range array list of data object
     public ArrayList<Integer> userTimeRange(Date beginDay, Date endDay) {
         ArrayList<Integer> dayIndexes = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(endDay);
+        cal.add(Calendar.DATE, 1);
+        endDay = cal.getTime();
+        cal.setTime(beginDay);
+        cal.add(Calendar.DATE,-1);
+        beginDay = cal.getTime();
         for (int i = 0; i < data.getTime_range().size(); i++) {
             if (data.getTime_range().get(i).after(beginDay) && data.getTime_range().get(i).before(endDay))
                 dayIndexes.add(i);
@@ -112,7 +120,6 @@ public class Summary extends Data{
         List<String> value = new ArrayList<>();
 
         for(List<Integer> group: dayIndexes){
-            System.out.println(group);
             long total=0;
             total=data.getPeople_vaccinated().get(group.get(group.size()-1));
             groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
@@ -128,14 +135,12 @@ public class Summary extends Data{
         ArrayList<List<String>> res = new ArrayList<>();
         List<String> groupName = new ArrayList<>();
         List<String> value = new ArrayList<>();
+
         for(List<Integer> group: dayIndexes){
             long total=0;
-            if(group.size()>1) total=data.getPeople_vaccinated().get(group.get(group.size()-1))-data.getPeople_vaccinated().get(group.get(0));
-            else {
-                if(group.get(0)!=0)
-                    total = data.getPeople_vaccinated().get(group.get(0)) - data.getPeople_vaccinated().get(group.get(0) - 1);
-                else total = data.getPeople_vaccinated().get(group.get(0));
-            }
+            if (group.get(0) != 0)
+                total += data.getPeople_vaccinated().get(group.get(group.size()-1)) - data.getPeople_vaccinated().get(group.get(0) - 1);
+            else total = data.getPeople_vaccinated().get(group.get(0));
             groupName.add(df.format(data.getTime_range().get(group.get(0)))+"-"+df.format(data.getTime_range().get(group.get(group.size()-1))));
             value.add(Long.toString(total));
         }

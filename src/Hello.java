@@ -148,7 +148,7 @@ public class Hello {
         }
 
         /*-- ASK USER TO CHOOSE DISPLAYING TYPE --*/
-        //System.out.println("Enter the METRICS:   1->TABLE    2->CHART ");
+        System.out.println("Enter the METRICS:   1->TABLE    2->CHART ");
         int displayType = in.nextInt();
         //System.out.println(displayData);
         Display display = new Display(summaryData);
