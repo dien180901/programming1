@@ -1,5 +1,6 @@
 import java.io.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class Hello {
     public static ArrayList<Data>  readFile() throws Exception {
     // Input file
         File file = new File(
-                "/Users/baohang/Desktop/RMIT/Programming 1/Asm2/programming1/programming1/src/covid-data.txt");
+                "data/covid-data.csv");
         BufferedReader br
                 = new BufferedReader(new FileReader(file));
 
@@ -88,14 +89,7 @@ public class Hello {
         }
         return Datas;
     }
-
-    public static void main(String[] args) throws Exception {
-        /*-- DATA FORMATTING --*/
-        ArrayList<Data> Datas = readFile();
-        Scanner in=new Scanner(System.in);
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-
-        /*-- ASK USER TO INPUT THE COUNTRY NAME --*/
+    public static int readCountry(Scanner in,ArrayList<Data> Datas  ){
         System.out.println("Enter a country: ");
         String countryName = in.nextLine();
         // Get the index of the country object
@@ -103,21 +97,25 @@ public class Hello {
         for(int i=0; i<Datas.size(); i++){
             if(countryName.equals(Datas.get(i).getGeographic_area())) indexInDatas=i;
         }
-
-        /*-- ASK USER TO INPUT THE BEGIN AND END DATE --*/
+        return indexInDatas;
+    }
+    public static Date readStartDay(Scanner in,DateFormat df ) throws ParseException {
         System.out.println("Enter start day (MM/dd/yyyy)");
         Date beginDay = df.parse(in.nextLine());
+        return beginDay;
+    }
+    public static Date readEndDay(Scanner in,DateFormat df ) throws ParseException {
         System.out.println("Enter end day (MM/dd/yyyy)");
         Date endDay = df.parse(in.nextLine());
-        // Create Summary variable
-        Summary summaryData = new Summary(Datas.get(indexInDatas));
-        // Create a time range within user date input
-        ArrayList<Integer> dayIndexes = summaryData.userTimeRange(beginDay, endDay);
-
-        /*-- ASK USER TO CHOOSE THE GROUPING STYLE --*/
-        ArrayList<List<Integer>> groupingAL = new ArrayList<>();
+        return endDay;
+    }
+    public static int readGroupingStyle(Scanner in){
         System.out.println("Enter the GROUPING STYLE:   1->NO GROUPING    2->NUMBER OF GROUPS   3->NUMBER OF DAYS ");
         int groupingStyle = in.nextInt();
+        return groupingStyle;
+    }
+    public static ArrayList<List<Integer>> handleGrouping(int groupingStyle,ArrayList<Integer> dayIndexes,Summary summaryData,Scanner in){
+        ArrayList<List<Integer>> groupingAL = new ArrayList<>();
         if(groupingStyle==1) groupingAL=summaryData.NoGroup(dayIndexes);
         else if(groupingStyle==2) {
             System.out.println("How many groups you want?: ");
@@ -129,31 +127,75 @@ public class Hello {
             int days = in.nextInt();
             groupingAL=summaryData.NumDay(dayIndexes, days);
         }
-
+        return groupingAL;
+    }
+    public static int readMetric(Scanner in){
         /*-- ASK USER TO CHOOSE THE METRICS --*/
         System.out.println("Enter the METRICS:   1->POSITIVE CASES    2->DEATHS   3->VACCINATED PEOPLE ");
         int metric = in.nextInt();
-
-        /*-- ASK USER TO CHOOSE THE RESULT TYPE --*/
+        return metric;
+    }
+    public static int readResultType(Scanner in){
         System.out.println("Enter the METRICS:   1->NEW TOTAL    2->UP TO ");
         int resType = in.nextInt();
-
-        /*-- ASK USER TO CHOOSE THE METRIC AND RESULT TYPE --*/
-        ArrayList<List<String>> displayData;
+        return resType;
+    }
+    public static void handleMetric(int metric,Summary summaryData,int resType,ArrayList<List<Integer>> groupingAL){
         if(metric==1) summaryData.UpToCases(groupingAL);
         else if(metric==2) summaryData.UpToDeaths(groupingAL);
         else if(metric==3){
             if(resType==1) summaryData.NewTotalVaccinated(groupingAL);
             else if(resType==2) summaryData.UpToVaccinateds(groupingAL);
         }
-
-        /*-- ASK USER TO CHOOSE DISPLAYING TYPE --*/
-        System.out.println("Enter the METRICS:   1->TABLE    2->CHART ");
+    }
+    public static int readDisplayType(Scanner in){
+        System.out.println("Enter the TYPE OF DISPLAY:   1->TABLE    2->CHART ");
         int displayType = in.nextInt();
-        //System.out.println(displayData);
+        return displayType;
+    }
+    public static void handleDisplay(Summary summaryData, int displayType){
         Display display = new Display(summaryData);
         if(displayType==1) display.tabularDisplay();
         if(displayType==2) display.chartDisplay();
+    }
+    public static void main(String[] args) throws Exception {
+        /*-- DATA FORMATTING --*/
+        ArrayList<Data> Datas = readFile();
+        Scanner in=new Scanner(System.in);
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+        /*-- ASK USER TO INPUT THE COUNTRY NAME --*/
+        int indexInDatas=readCountry(in,Datas);
+
+        /*-- ASK USER TO INPUT THE BEGIN AND END DATE --*/
+        Date beginDay = readStartDay(in,df);
+        Date endDay = readEndDay(in,df);
+        // Create Summary variable
+        Summary summaryData = new Summary(Datas.get(indexInDatas));
+        // Create a time range within user date input
+        ArrayList<Integer> dayIndexes = summaryData.userTimeRange(beginDay, endDay);
+
+        /*-- ASK USER TO CHOOSE THE GROUPING STYLE --*/
+
+        int groupingStyle = readGroupingStyle(in);
+        ArrayList<List<Integer>> groupingAL = handleGrouping(groupingStyle,dayIndexes,summaryData,in);
+
+        /*-- ASK USER TO CHOOSE THE METRICS --*/
+
+        int metric = readMetric(in);
+
+        /*-- ASK USER TO CHOOSE THE RESULT TYPE --*/
+
+        int resType = readResultType(in);
+
+        /*-- ASK USER TO CHOOSE THE METRIC AND RESULT TYPE --*/
+//        ArrayList<List<String>> displayData;
+        handleMetric( metric, summaryData, resType, groupingAL);
+
+        /*-- ASK USER TO CHOOSE DISPLAYING TYPE --*/
+        int displayType = readDisplayType(in);
+        //System.out.println(displayData);
+        handleDisplay(summaryData,displayType);
 
     }
 }
