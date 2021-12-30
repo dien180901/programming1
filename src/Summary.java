@@ -30,7 +30,9 @@ public class Summary extends Data{
         cal.setTime(endDay);
         cal.add(Calendar.DATE, 1);
         endDay = cal.getTime();
+
         cal.setTime(beginDay);
+
         cal.add(Calendar.DATE,-1);
         beginDay = cal.getTime();
         for (int i = 0; i < data.getTime_range().size(); i++) {

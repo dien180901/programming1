@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
@@ -6,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 // Main class
-public class Hello {
+public class Main {
     // main driver method
     public boolean is_empty(String s){
         return s.length()==0;
@@ -93,52 +94,119 @@ public class Hello {
         System.out.println("Enter a country: ");
         String countryName = in.nextLine();
         // Get the index of the country object
-        int indexInDatas=0;
+        int indexInDatas=-1;
+        ArrayList<String> countries=new ArrayList<>();
         for(int i=0; i<Datas.size(); i++){
             if(countryName.equals(Datas.get(i).getGeographic_area())) indexInDatas=i;
+            countries.add(Datas.get(i).getGeographic_area());
+        }
+        while (indexInDatas==-1){
+            System.out.println("Invalid Country name. Please choose one country from this list");
+            System.out.println(countries);
+            countryName = in.nextLine();
+            for(int i=0; i<Datas.size(); i++){
+                if(countryName.equals(Datas.get(i).getGeographic_area())) indexInDatas=i;
+            }
         }
         return indexInDatas;
     }
-    public static Date readStartDay(Scanner in,DateFormat df ) throws ParseException {
+    public static Date readStartDay(Scanner in,DateFormat df,Date endRecordedDate ) throws ParseException {
         System.out.println("Enter start day (MM/dd/yyyy)");
-        Date beginDay = df.parse(in.nextLine());
+        Date beginDay= new Date();
+        try{
+             beginDay = df.parse(in.nextLine());
+             if (beginDay.compareTo(endRecordedDate)>0){
+                 System.out.println("Please re-enter the begin date, the end Date for the data about this country is "+endRecordedDate);
+                 return readStartDay( in, df,endRecordedDate );
+             }
+        }catch(Exception e){
+            System.out.println("Invalid Date format, please for follow (MM/dd/yyyy)");
+            return readStartDay( in, df,endRecordedDate );
+        }
+
         return beginDay;
     }
-    public static Date readEndDay(Scanner in,DateFormat df ) throws ParseException {
+    public static Date readEndDay(Scanner in,DateFormat df,Date startRecordedDate ) throws ParseException {
         System.out.println("Enter end day (MM/dd/yyyy)");
-        Date endDay = df.parse(in.nextLine());
-        return endDay;
+        Date endDate= new Date();
+        try{
+            endDate = df.parse(in.nextLine());
+            if (startRecordedDate.compareTo(endDate)>0){
+                System.out.println("Please re-enter the end date, the start Date for the data about this country is "+startRecordedDate);
+                return readStartDay( in, df,startRecordedDate );
+            }
+        }catch(Exception e){
+            System.out.println("Invalid Date format, please for follow (MM/dd/yyyy)");
+            return readEndDay( in, df,startRecordedDate );
+        }
+
+        return endDate;
     }
     public static int readGroupingStyle(Scanner in){
         System.out.println("Enter the GROUPING STYLE:   1->NO GROUPING    2->NUMBER OF GROUPS   3->NUMBER OF DAYS ");
-        int groupingStyle = in.nextInt();
-        return groupingStyle;
+        String groupingStyle = in.nextLine();
+        Set<String> hash_Set = new HashSet<String>();
+        Collections.addAll(hash_Set,"1","2","3");
+        if (!hash_Set.contains(groupingStyle)){
+            System.out.println("Invalid Group Style input, please enter 1,2 or 3");
+            return readGroupingStyle( in);
+        }
+        System.out.println(groupingStyle);
+        return Integer.parseInt(groupingStyle);
+
     }
     public static ArrayList<List<Integer>> handleGrouping(int groupingStyle,ArrayList<Integer> dayIndexes,Summary summaryData,Scanner in){
         ArrayList<List<Integer>> groupingAL = new ArrayList<>();
         if(groupingStyle==1) groupingAL=summaryData.NoGroup(dayIndexes);
         else if(groupingStyle==2) {
             System.out.println("How many groups you want?: ");
-            int groups = in.nextInt();
-            groupingAL=summaryData.NumGroup(dayIndexes, groups);
+            String input = in.nextLine();
+            try{
+                int groups=Integer.parseInt(input);
+                return summaryData.NumGroup(dayIndexes, groups);
+            }catch(Exception e){
+                System.out.println("Invalid input, please enter integer number");
+                return handleGrouping( groupingStyle, dayIndexes, summaryData, in);
+            }
+
         }
         else if(groupingStyle==3) {
             System.out.println("How many days you want in a group?: ");
-            int days = in.nextInt();
-            groupingAL=summaryData.NumDay(dayIndexes, days);
+            String input = in.nextLine();
+            try{
+                int days=Integer.parseInt(input);
+                return summaryData.NumDay(dayIndexes, days);
+            }catch(Exception e){
+                System.out.println("Invalid input, please enter integer number");
+                return handleGrouping( groupingStyle, dayIndexes, summaryData, in);
+            }
+
         }
         return groupingAL;
     }
     public static int readMetric(Scanner in){
         /*-- ASK USER TO CHOOSE THE METRICS --*/
         System.out.println("Enter the METRICS:   1->POSITIVE CASES    2->DEATHS   3->VACCINATED PEOPLE ");
-        int metric = in.nextInt();
-        return metric;
+        String metric = in.nextLine();
+        Set<String> hash_Set = new HashSet<String>();
+        Collections.addAll(hash_Set,"1","2","3");
+        if (!hash_Set.contains(metric)){
+            System.out.println("Invalid Group Style input, please enter 1,2 or 3");
+            return readMetric( in);
+        }
+        return Integer.parseInt(metric);
+
     }
     public static int readResultType(Scanner in){
         System.out.println("Enter the METRICS:   1->NEW TOTAL    2->UP TO ");
-        int resType = in.nextInt();
-        return resType;
+        String resultType = in.nextLine();
+        Set<String> hash_Set = new HashSet<String>();
+        Collections.addAll(hash_Set,"1","2");
+        if (!hash_Set.contains(resultType)){
+            System.out.println("Invalid Group Style input, please enter 1 or 2");
+            return readResultType( in);
+        }
+        return Integer.parseInt(resultType);
     }
     public static void handleMetric(int metric,Summary summaryData,int resType,ArrayList<List<Integer>> groupingAL){
         if(metric==1) summaryData.UpToCases(groupingAL);
@@ -150,8 +218,14 @@ public class Hello {
     }
     public static int readDisplayType(Scanner in){
         System.out.println("Enter the TYPE OF DISPLAY:   1->TABLE    2->CHART ");
-        int displayType = in.nextInt();
-        return displayType;
+        String displayType = in.nextLine();
+        Set<String> hash_Set = new HashSet<String>();
+        Collections.addAll(hash_Set,"1","2");
+        if (!hash_Set.contains(displayType)){
+            System.out.println("Invalid Group Style input, please enter 1 or 2");
+            return readDisplayType( in);
+        }
+        return Integer.parseInt(displayType);
     }
     public static void handleDisplay(Summary summaryData, int displayType){
         Display display = new Display(summaryData);
@@ -162,14 +236,17 @@ public class Hello {
         /*-- DATA FORMATTING --*/
         ArrayList<Data> Datas = readFile();
         Scanner in=new Scanner(System.in);
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        df.setLenient(false);
         /*-- ASK USER TO INPUT THE COUNTRY NAME --*/
         int indexInDatas=readCountry(in,Datas);
-
+        Date startRecordedDate=Datas.get(indexInDatas).getTime_range().get(0);
         /*-- ASK USER TO INPUT THE BEGIN AND END DATE --*/
-        Date beginDay = readStartDay(in,df);
-        Date endDay = readEndDay(in,df);
+        int lengthOfTimerange=Datas.get(indexInDatas).getTime_range().size();
+        Date endRecordedDate=Datas.get(indexInDatas).getTime_range().get(lengthOfTimerange-1);
+        Date beginDay = readStartDay(in,df,endRecordedDate);
+        Date endDay = readEndDay(in,df,startRecordedDate);
         // Create Summary variable
         Summary summaryData = new Summary(Datas.get(indexInDatas));
         // Create a time range within user date input
@@ -178,6 +255,7 @@ public class Hello {
         /*-- ASK USER TO CHOOSE THE GROUPING STYLE --*/
 
         int groupingStyle = readGroupingStyle(in);
+        System.out.println(groupingStyle);
         ArrayList<List<Integer>> groupingAL = handleGrouping(groupingStyle,dayIndexes,summaryData,in);
 
         /*-- ASK USER TO CHOOSE THE METRICS --*/
