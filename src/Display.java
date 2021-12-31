@@ -5,7 +5,7 @@ public class Display {
     // Create attributes
     Summary summ;
 
-    // Create constructor for DataDisplay class
+    // Create constructor for Display class
     public Display(Summary summ) {
         this.summ = summ;
     }
