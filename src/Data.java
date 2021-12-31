@@ -2,16 +2,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Data {
+
+    // Declaration
     private String iso_code;
     private String geographic_area;
+
+    // Store all the day and other statistics as an arrayList then we just action on the index of the day.
     private ArrayList<Date> time_range;
     private ArrayList<Long> new_cases;
     private ArrayList<Long> new_deaths ;
     private ArrayList<Long> people_vaccinated;
     private ArrayList<Long> population ;
 
+    // Default Constructor
     public Data() {
-
         this.geographic_area = "";
         this.time_range = new ArrayList<Date>();
         this.iso_code = "";
@@ -21,6 +25,7 @@ public class Data {
         this.population = new ArrayList<Long>();
     }
 
+    // Constructor
     public Data(String iso_code, String geographic_area, ArrayList<Date> time_range, ArrayList<Long> new_cases, ArrayList<Long> new_deaths, ArrayList<Long> people_vaccinated, ArrayList<Long> population) {
         this.iso_code = iso_code;
         this.geographic_area = geographic_area;
@@ -31,6 +36,7 @@ public class Data {
         this.population = population;
     }
 
+    // Getter and Setter
     public String getGeographic_area() {
         return geographic_area;
     }
