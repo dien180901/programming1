@@ -32,7 +32,7 @@ public class Display {
         for (int y = 0; y < 24; y++) {
             System.out.print("\n|");
             String blank = " ";
-            // Iterate through dat
+            // Iterate through data
             for (String value : summ.getdisplayData().get(1)) {
                 // formula to calculated the possition of data
                 int patern = 23 - Math.round(23 / maxValue * Integer.parseInt(value));
