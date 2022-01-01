@@ -10,4 +10,4 @@ Github Repository URL:
 https://github.com/dien180901/programming1.git
 
 Link to Youtube video:
-https://youtu.be/4VQva5f5JJ4
+https://www.youtube.com/watch?v=4VQva5f5JJ4
