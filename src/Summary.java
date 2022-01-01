@@ -24,6 +24,14 @@ public class Summary{
         return displayData;
     }
 
+    //Setter
+    public void setData(Data data) {
+        this.data = data;
+    }
+    public void setDisplayData(ArrayList<List<String>> displayData) {
+        this.displayData = displayData;
+    }
+
     /** Get the time range from user's date input
      * This function will get all the indexes of days which are between the start and end date of user's input.
      * @param beginDay the begin date input by user

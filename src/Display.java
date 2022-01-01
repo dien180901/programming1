@@ -2,15 +2,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Display {
-    // Create attributes
+    // Declaration
     Summary summ;
 
-    // Create constructor for Display class
+    // Constructor
     public Display(Summary summ) {
         this.summ = summ;
     }
 
-    // Method to display data by table
+    // Getter
+    public Summary getSumm() {
+        return summ;
+    }
+
+    // Setter
+    public void setSumm(Summary summ) {
+        this.summ = summ;
+    }
+
+    /** tabularDisplay function
+     * Method to display data by table. The function will read the day's indexes from the Summary object
+     */
     public void tabularDisplay() {
 
         System.out.println(" ________________________________________________");
@@ -24,7 +36,9 @@ public class Display {
         System.out.println("|_______________________________|________________|");
     }
 
-    // Method to display data by chart
+    /** chartDisplay function
+     * Method to display data by chart. The function will read the day's indexes from the Summary object
+     */
     public void chartDisplay() {
         // Get largest value from data
         float maxValue = MaximumValue(summ.getdisplayData());
@@ -60,7 +74,11 @@ public class Display {
         }
     }
 
-    //Method to get largest value from data
+    /** MaximumValue function
+     * Method to get the largest value from data. The position of other values will be set by following the max value
+     * @param displayData the nested list which includes all the values.
+     * @return the maximum value.
+     */
     public int MaximumValue (ArrayList<List<String>> displayData) {
         int max = 0;
         List<String>values = displayData.get(1);

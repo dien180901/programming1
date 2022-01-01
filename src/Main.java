@@ -272,7 +272,7 @@ public class Main {
      * @return the integer expressed the result type
      */
     public static int readResultType(Scanner in){
-        System.out.println("Enter the METRICS:   1->NEW TOTAL    2->UP TO ");
+        System.out.println("Enter the RESULT TYPE:   1->NEW TOTAL    2->UP TO ");
         String resultType = in.nextLine();
         Set<String> hash_Set = new HashSet<String>();
         Collections.addAll(hash_Set,"1","2");
