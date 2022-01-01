@@ -1,4 +1,4 @@
-Contribution Information:
+Contribution Information
 Ma Phu Dien - s3891528
 Kieu Cong Tam - s3922087
 Nguyen Xuan Thanh - s3915468
