@@ -20,6 +20,16 @@ public class Main {
         return Long.parseLong(s);
     }
 
+    /** Exit function for user
+     * If user input '0', the system will exit
+     * @param s a String.
+     * @return a boolean true if s="0".
+     */
+    public static boolean exitFunction (String s){
+        return s.equals("0");
+    }
+
+
     /** Read file function
      * Read and clean the Data CSV file and store all the object in one List
      */
@@ -103,8 +113,11 @@ public class Main {
      * @return the index of the data object in datas
      */
     public static int readCountry(Scanner in,ArrayList<Data> Datas  ){
-        System.out.println("Enter a country: ");
+        System.out.println("Enter a country or '0' to EXIT: ");
         String countryName = in.nextLine();
+
+        // Exit if user press 0
+        if(exitFunction(countryName)) System.exit(0);
 
         // Get the index of the country object
         int indexInDatas=-1;
@@ -134,13 +147,16 @@ public class Main {
      * @return date
      */
     public static Date readStartDay(Scanner in,DateFormat df,Date endRecordedDate ) throws ParseException {
-        System.out.println("Enter start day (MM/dd/yyyy)");
+        System.out.println("Enter start day (MM/dd/yyyy) or '0' to EXIT: ");
         Date beginDay= new Date();
 
         // Validation
         try{
-             beginDay = df.parse(in.nextLine());
-             if (beginDay.compareTo(endRecordedDate)>0){
+            String DayString =  in.nextLine();
+            // Exit if user press 0
+            if(exitFunction(DayString)) System.exit(0);
+            beginDay = df.parse(DayString);
+            if (beginDay.compareTo(endRecordedDate)>0){
                  System.out.println("Please re-enter the begin date, the end Date for the data about this country is "+endRecordedDate);
                  return readStartDay( in, df,endRecordedDate );
              }
@@ -159,12 +175,15 @@ public class Main {
      * @return date
      */
     public static Date readEndDay(Scanner in,DateFormat df,Date startRecordedDate ) throws ParseException {
-        System.out.println("Enter end day (MM/dd/yyyy)");
+        System.out.println("Enter end day (MM/dd/yyyy) or '0' to EXIT: ");
         Date endDate= new Date();
 
         // Validation
         try{
-            endDate = df.parse(in.nextLine());
+            String DayString = in.nextLine();
+            // Exit if user press 0
+            if(exitFunction(DayString)) System.exit(0);
+            endDate = df.parse(DayString);
             if (startRecordedDate.compareTo(endDate)>0){
                 System.out.println("Please re-enter the end date, the start Date for the data about this country is "+startRecordedDate);
                 return readStartDay( in, df,startRecordedDate );
@@ -182,8 +201,10 @@ public class Main {
      * @return the integer expressed the style
      */
     public static int readGroupingStyle(Scanner in){
-        System.out.println("Enter the GROUPING STYLE:   1->NO GROUPING    2->NUMBER OF GROUPS   3->NUMBER OF DAYS ");
+        System.out.println("Enter the GROUPING STYLE:   0->EXIT   1->NO GROUPING    2->NUMBER OF GROUPS   3->NUMBER OF DAYS ");
         String groupingStyle = in.nextLine();
+        // Exit if user press 0
+        if(exitFunction(groupingStyle)) System.exit(0);
         Set<String> hash_Set = new HashSet<String>();
         Collections.addAll(hash_Set,"1","2","3");
 
@@ -253,8 +274,10 @@ public class Main {
      * @return the integer expressed the metric
      */
     public static int readMetric(Scanner in){
-        System.out.println("Enter the METRICS:   1->POSITIVE CASES    2->DEATHS   3->VACCINATED PEOPLE ");
+        System.out.println("Enter the METRICS:  0->EXIT   1->POSITIVE CASES    2->DEATHS   3->VACCINATED PEOPLE ");
         String metric = in.nextLine();
+        // Exit if user press 0
+        if(exitFunction(metric)) System.exit(0);
         Set<String> hash_Set = new HashSet<String>();
         Collections.addAll(hash_Set,"1","2","3");
 
@@ -272,8 +295,10 @@ public class Main {
      * @return the integer expressed the result type
      */
     public static int readResultType(Scanner in){
-        System.out.println("Enter the RESULT TYPE:   1->NEW TOTAL    2->UP TO ");
+        System.out.println("Enter the RESULT TYPE:  0->EXIT   1->NEW TOTAL    2->UP TO ");
         String resultType = in.nextLine();
+        // Exit if user press 0
+        if(exitFunction(resultType)) System.exit(0);
         Set<String> hash_Set = new HashSet<String>();
         Collections.addAll(hash_Set,"1","2");
 
@@ -307,8 +332,10 @@ public class Main {
      * @return the integer expressed the result display type
      */
     public static int readDisplayType(Scanner in){
-        System.out.println("Enter the TYPE OF DISPLAY:   1->TABLE    2->CHART ");
+        System.out.println("Enter the TYPE OF DISPLAY:  0->EXIT    1->TABLE    2->CHART ");
         String displayType = in.nextLine();
+        // Exit if user press 0
+        if(exitFunction(displayType)) System.exit(0);
         Set<String> hash_Set = new HashSet<String>();
         Collections.addAll(hash_Set,"1","2");
         if (!hash_Set.contains(displayType)){
